@@ -166,7 +166,6 @@
 
 // export default ProfilePage;
 
-
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Chart from 'chart.js/auto';
@@ -190,7 +189,9 @@ const ProfilePage = () => {
         const { data } = await authAxios.get(`/measurements/user/${user._id}`);
         console.log('Fetched measurements:', data);
         setMeasurements(data);
-        setChart(data);
+        if (chartRef.current) {
+          setChart(data);
+        }
       } catch (error) {
         console.error('Error fetching measurements', error);
       }
@@ -206,7 +207,9 @@ const ProfilePage = () => {
       console.log('Measurement added:', data);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = [...prevMeasurements, data];
-        setChart(newMeasurements);
+        if (chartRef.current) {
+          setChart(newMeasurements);
+        }
         return newMeasurements;
       });
       setWeight('');
@@ -227,7 +230,9 @@ const ProfilePage = () => {
       console.log('Measurement updated:', data);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = prevMeasurements.map((m) => (m._id === editingMeasurement._id ? data : m));
-        setChart(newMeasurements);
+        if (chartRef.current) {
+          setChart(newMeasurements);
+        }
         return newMeasurements;
       });
       setEditingMeasurement(null);
@@ -243,7 +248,9 @@ const ProfilePage = () => {
       console.log('Measurement deleted:', id);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = prevMeasurements.filter((m) => m._id !== id);
-        setChart(newMeasurements);
+        if (chartRef.current) {
+          setChart(newMeasurements);
+        }
         return newMeasurements;
       });
     } catch (error) {
