@@ -82,12 +82,40 @@ const ProfilePage = () => {
     }
   };
 
+  // const setChart = (data) => {
+  //   const ctx = document.getElementById('progressChart').getContext('2d');
+  //   if (chartRef.current) {
+  //     chartRef.current.destroy();
+  //   }
+  //   chartRef.current = new Chart(ctx, {
+  //     type: 'line',
+  //     data: {
+  //       labels: data.map((m) => new Date(m.date).toLocaleDateString()),
+  //       datasets: [{
+  //         label: 'Weight',
+  //         data: data.map((m) => m.weight),
+  //         borderColor: 'rgba(75, 192, 192, 1)',
+  //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+  //         fill: true
+  //       }]
+  //     },
+  //     options: {
+  //       scales: {
+  //         y: {
+  //           beginAtZero: true
+  //         }
+  //       }
+  //     }
+  //   });
+  // };
+
   const setChart = (data) => {
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    if (chartRef.current) {
-      chartRef.current.destroy();
+    if (!chartRef.current) return;
+    const ctx = chartRef.current.getContext('2d');
+    if (chartRef.chart) {
+      chartRef.chart.destroy();
     }
-    chartRef.current = new Chart(ctx, {
+    chartRef.chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: data.map((m) => new Date(m.date).toLocaleDateString()),
