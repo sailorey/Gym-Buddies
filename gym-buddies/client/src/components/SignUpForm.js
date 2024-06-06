@@ -7,7 +7,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { authAxios } = useContext(AuthContext);
+  const { registerUser } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,14 +16,11 @@ const SignUpForm = () => {
       return;
     }
 
-    const payload = { username, password };
-
-    try {
-      const response = await authAxios.post('/users/register', payload);
-      console.log('Response received:', response); // Check the server's response
+    const result = await registerUser(username, password);
+    if (result.success) {
       setMessage('User registered successfully');
-    } catch (error) {
-      setMessage('Error registering user');
+    } else {
+      setMessage(result.message);
     }
   };
 

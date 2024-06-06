@@ -7,21 +7,17 @@ const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { login, authAxios } = useContext(AuthContext);
+  const { loginUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { username, password };
-
-    try {
-      const response = await authAxios.post('/users/login', payload);
-      console.log('Response received:', response); // Check the server's response
-      login(response.data.token);
+    const result = await loginUser(username, password);
+    if (result.success) {
       setMessage('User logged in successfully');
       navigate('/profile'); // Redirect to profile page
-    } catch (error) {
-      setMessage('Error logging in');
+    } else {
+      setMessage(result.message);
     }
   };
 
