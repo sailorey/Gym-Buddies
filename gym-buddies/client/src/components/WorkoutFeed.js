@@ -11,6 +11,7 @@ const WorkoutFeed = () => {
     const fetchWorkouts = async () => {
       try {
         const { data } = await authAxios.get('/workouts');
+        console.log('Fetched workouts:', data); // Log the fetched data
         setWorkouts(data);
       } catch (error) {
         console.error('Error fetching workouts', error);
