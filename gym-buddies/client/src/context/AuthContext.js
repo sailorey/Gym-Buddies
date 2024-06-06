@@ -30,11 +30,12 @@ const AuthProvider = ({ children }) => {
   };
 
   const authAxios = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
+  
 
   return (
     <AuthContext.Provider value={{ user, login, logout, authAxios }}>
