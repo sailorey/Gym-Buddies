@@ -51,8 +51,14 @@ const AuthProvider = ({ children }) => {
         `${window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`}/users/login`,
         payload
       );
-      login(response.data.token);
-      return { success: true };
+      console.log('Login response:', response); // Log the response
+      if (response.data && response.data.token) {
+        login(response.data.token);
+        return { success: true };
+      } else {
+        console.error('No token in response');
+        return { success: false, message: 'No token in response' };
+      }
     } catch (error) {
       console.error('Error logging in:', error);
       return { success: false, message: 'Error logging in' };
@@ -66,8 +72,14 @@ const AuthProvider = ({ children }) => {
         `${window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`}/users/register`,
         payload
       );
-      login(response.data.token);
-      return { success: true };
+      console.log('Register response:', response); // Log the response
+      if (response.data && response.data.token) {
+        login(response.data.token);
+        return { success: true };
+      } else {
+        console.error('No token in response');
+        return { success: false, message: 'No token in response' };
+      }
     } catch (error) {
       console.error('Error registering user:', error);
       return { success: false, message: 'Error registering user' };
