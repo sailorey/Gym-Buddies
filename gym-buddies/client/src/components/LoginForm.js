@@ -17,7 +17,8 @@ const LoginForm = () => {
     const payload = { username, password };
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/login`, payload);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, payload);
+      console.log('Response received:', response); // Check the server's response
       login(response.data.token);
       setMessage('User logged in successfully');
       navigate('/profile'); // Redirect to profile page
