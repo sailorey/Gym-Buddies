@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const authAxios = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api',
+    baseURL: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`,
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
