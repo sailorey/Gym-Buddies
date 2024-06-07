@@ -35,11 +35,11 @@ router.post('/', authMiddleware, async (req, res) => {
   const { workout, content } = req.body;
   try {
     const comment = new Comment({ workout, content, user: req.user._id });
-    const saveComment = await comment.save();
-    const populatedComment = await saveComment.populate('user', 'username');
+    const savedComment = await comment.save();
+    const populatedComment = await savedComment.populate('user', 'username');
     res.status(201).json(populatedComment);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({ message: 'Error creating comment', error });
   }
 });
@@ -53,7 +53,6 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (comment.user.toString() !== req.user.id) return res.status(401).json({ message: 'Unauthorized' });
 
     comment.content = req.body.content || comment.content;
-    comment.edited = true;
 
     await comment.save();
     res.json(comment);
@@ -80,6 +79,5 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     res.status(400).json({ message: 'Error deleting comment', error });
   }
 });
-
 
 module.exports = router;

@@ -22,8 +22,6 @@ const authMiddleware = async (req, res, next) => {
 // Register a new user
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
-  console.log('Received registration request:', req.body); // Log the request body
-
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
@@ -38,10 +36,14 @@ router.post('/register', async (req, res) => {
     // Create and save the new user
     const user = new User({ username, password });
     await user.save();
-    console.log('User registered:', user); // Log the registered user
-    res.status(201).json({ message: 'User registered successfully' });
+
+    // Generate a token
+    const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.status(201).json({ token });
   } catch (error) {
-    console.error('Error registering user:', error); // Log the error
     res.status(400).json({ message: 'Error registering user', error });
   }
 });
@@ -49,28 +51,23 @@ router.post('/register', async (req, res) => {
 // Log in an existing user
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log('Received login request:', req.body); // Log the request body
-
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
 
   try {
     const user = await User.findOne({ username });
-    console.log('Found user:', user); // Log the found user
 
     if (user && (await user.matchPassword(password))) {
       const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
         expiresIn: '1h',
       });
-      console.log('Login successful, token:', token); // Log the generated token
+
       res.json({ token });
     } else {
-      console.log('Invalid username or password'); // Log the invalid login attempt
       res.status(401).json({ message: 'Invalid username or password' });
     }
   } catch (error) {
-    console.error('Error logging in user:', error); // Log the error
     res.status(400).json({ message: 'Error logging in user', error });
   }
 });

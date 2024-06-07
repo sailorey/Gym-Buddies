@@ -22,9 +22,9 @@ const authMiddleware = async (req, res, next) => {
 
 // Create a new measurement
 router.post('/', authMiddleware, async (req, res) => {
-  const { weight } = req.body;
+  const { weight, height } = req.body;
   try {
-    const measurement = new Measurement({ weight, user: req.user.id });
+    const measurement = new Measurement({ weight, height, user: req.user.id });
     await measurement.save();
     res.status(201).json(measurement);
   } catch (error) {
@@ -55,6 +55,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 
     measurement.weight = req.body.weight || measurement.weight;
+    measurement.height = req.body.height || measurement.height;
     await measurement.save();
     res.json(measurement);
   } catch (error) {
