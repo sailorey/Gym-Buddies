@@ -27,17 +27,14 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    // Check if the username is already taken
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: 'Username already taken' });
     }
 
-    // Create and save the new user
     const user = new User({ username, password });
     await user.save();
 
-    // Generate a token
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });

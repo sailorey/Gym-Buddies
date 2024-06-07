@@ -17,7 +17,7 @@ const LoginForm = () => {
       setMessage('User logged in successfully');
       navigate('/profile'); // Redirect to profile page
     } else {
-      setMessage(result.message);
+      setMessage(result.message || 'Login failed');
     }
   };
 
@@ -27,11 +27,19 @@ const LoginForm = () => {
       {message && <p>{message}</p>}
       <label>
         Username:
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       </label>
       <label>
         Password:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </label>
       <button type="submit">Login</button>
     </form>

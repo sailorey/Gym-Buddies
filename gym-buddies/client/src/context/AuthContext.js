@@ -26,9 +26,7 @@ const AuthProvider = ({ children }) => {
       console.error('No token provided');
       return;
     }
-
     localStorage.setItem('token', token);
-
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       setUser({ _id: decodedToken.id, username: decodedToken.username });
