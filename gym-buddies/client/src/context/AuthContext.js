@@ -42,52 +42,36 @@ const AuthProvider = ({ children }) => {
     navigate('/');
   };
 
-  const loginUser = async (username, password) => {
-    const payload = { username, password };
-    try {
-      const response = await axios.post(
-        `${window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`}/users/login`,
-        payload
-      );
-      console.log('Login response:', response); // Log the response
-      if (response.data && response.data.token) {
-        login(response.data.token);
-        return { success: true };
-      } else {
-        console.error('No token in response');
-        return { success: false, message: 'No token in response' };
-      }
-    } catch (error) {
-      console.error('Error logging in:', error);
-      return { success: false, message: 'Error logging in' };
-    }
-  };
-  
-  
+const loginUser = async (username, password) => {
+  try {
+    const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
+    const { token } = response.data;
+    localStorage.setItem('token', token);
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    setUser({ _id: decodedToken.id, username: decodedToken.username });
+    navigate('/profile');
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
 
-  const registerUser = async (username, password) => {
-    const payload = { username, password };
-    try {
-      const response = await axios.post(
-        `${window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`}/users/register`,
-        payload
-      );
-      console.log('Register response:', response); // Log the response
-      if (response.data && response.data.token) {
-        login(response.data.token);
-        return { success: true };
-      } else {
-        console.error('No token in response');
-        return { success: false, message: 'No token in response' };
-      }
-    } catch (error) {
-      console.error('Error registering user:', error);
-      return { success: false, message: 'Error registering user' };
-    }
-  };
+const registerUser = async (username, password) => {
+  try {
+    const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
+    const { token } = response.data;
+    localStorage.setItem('token', token);
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    setUser({ _id: decodedToken.id, username: decodedToken.username });
+    navigate('/profile');
+  } catch (error) {
+    console.error('Error registering:', error);
+    throw error;
+  }
+};
 
   const authAxios = axios.create({
-    baseURL: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : `${window.location.origin}/api`,
+    baseURL: 'https://gym-buddies.onrender.com/api',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
