@@ -62,6 +62,8 @@ const AuthProvider = ({ children }) => {
       return { success: false, message: 'Error logging in' };
     }
   };
+  
+  
 
   const registerUser = async (username, password) => {
     const payload = { username, password };

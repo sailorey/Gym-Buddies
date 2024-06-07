@@ -34,11 +34,15 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const workout = await Workout.findById(req.params.id).populate('user', 'username');
+    if (!workout) {
+      return res.status(404).json({ message: 'Workout not found' });
+    }
     res.json(workout);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching workout', error });
   }
 });
+
 
 // Create a new workout
 router.post('/', authMiddleware, async (req, res) => {
