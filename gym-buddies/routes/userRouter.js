@@ -69,7 +69,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
 // Get user profile
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
