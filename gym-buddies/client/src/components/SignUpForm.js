@@ -20,7 +20,7 @@ const SignUpForm = () => {
     if (result.success) {
       setMessage('User registered successfully');
     } else {
-      setMessage(result.message);
+      setMessage(result.message || 'Registration failed');
     }
   };
 

@@ -42,33 +42,43 @@ const AuthProvider = ({ children }) => {
     navigate('/');
   };
 
-const loginUser = async (username, password) => {
-  try {
-    const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
-    const { token } = response.data;
-    localStorage.setItem('token', token);
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    setUser({ _id: decodedToken.id, username: decodedToken.username });
-    navigate('/profile');
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-};
+  const loginUser = async (username, password) => {
+    try {
+      const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
+      const { token } = response.data;
+      if (!token) {
+        throw new Error('Token not found in response');
+      }
+      console.log('Token received:', token);
+      localStorage.setItem('token', token);
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      navigate('/profile');
+      return { success: true };
+    } catch (error) {
+      console.error('Error logging in:', error);
+      return { success: false, message: error.response?.data?.message || 'Login failed' };
+    }
+  };
 
-const registerUser = async (username, password) => {
-  try {
-    const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
-    const { token } = response.data;
-    localStorage.setItem('token', token);
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    setUser({ _id: decodedToken.id, username: decodedToken.username });
-    navigate('/profile');
-  } catch (error) {
-    console.error('Error registering:', error);
-    throw error;
-  }
-};
+  const registerUser = async (username, password) => {
+    try {
+      const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
+      const { token } = response.data;
+      if (!token) {
+        throw new Error('Token not found in response');
+      }
+      console.log('Token received:', token);
+      localStorage.setItem('token', token);
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      navigate('/profile');
+      return { success: true };
+    } catch (error) {
+      console.error('Error registering:', error);
+      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+    }
+  };
 
   const authAxios = axios.create({
     baseURL: 'https://gym-buddies.onrender.com/api',
