@@ -45,6 +45,7 @@ const AuthProvider = ({ children }) => {
   const loginUser = async (username, password) => {
     try {
       const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
+      console.log('Login response:', response); // Log the response
       const { token } = response.data;
       if (!token) {
         throw new Error('Token not found in response');
@@ -64,6 +65,7 @@ const AuthProvider = ({ children }) => {
   const registerUser = async (username, password) => {
     try {
       const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
+      console.log('Register response:', response); // Log the response
       const { token } = response.data;
       if (!token) {
         throw new Error('Token not found in response');
