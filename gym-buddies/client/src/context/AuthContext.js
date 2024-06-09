@@ -45,40 +45,40 @@ const AuthProvider = ({ children }) => {
   const loginUser = async (username, password) => {
     try {
       const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
-      console.log('Login response:', response); // Log the response
-      const { token } = response.data;
-      if (!token) {
+      console.log('Login response:', response);
+      if (response.data && response.data.token) {
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setUser({ _id: decodedToken.id, username: decodedToken.username });
+        navigate('/profile');
+      } else {
+        console.error('Token not found in response');
         throw new Error('Token not found in response');
       }
-      console.log('Token received:', token);
-      localStorage.setItem('token', token);
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setUser({ _id: decodedToken.id, username: decodedToken.username });
-      navigate('/profile');
-      return { success: true };
     } catch (error) {
       console.error('Error logging in:', error);
-      return { success: false, message: error.response?.data?.message || 'Login failed' };
+      throw error;
     }
   };
 
   const registerUser = async (username, password) => {
     try {
       const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
-      console.log('Register response:', response); // Log the response
-      const { token } = response.data;
-      if (!token) {
+      console.log('Register response:', response);
+      if (response.data && response.data.token) {
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setUser({ _id: decodedToken.id, username: decodedToken.username });
+        navigate('/profile');
+      } else {
+        console.error('Token not found in response');
         throw new Error('Token not found in response');
       }
-      console.log('Token received:', token);
-      localStorage.setItem('token', token);
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setUser({ _id: decodedToken.id, username: decodedToken.username });
-      navigate('/profile');
-      return { success: true };
     } catch (error) {
       console.error('Error registering:', error);
-      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+      throw error;
     }
   };
 
