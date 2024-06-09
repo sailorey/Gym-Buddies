@@ -31,6 +31,12 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error('Error: Missing JWT_SECRET environment variable');
+  process.exit(1); // Exit with error code if JWT_SECRET is not set
+}
 
 mongoose.connect(DB_URI)
   .then(() => {
