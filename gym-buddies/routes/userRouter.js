@@ -26,9 +26,8 @@ router.post('/register', async (req, res) => {
       expiresIn: '1h',
     });
 
-    console.log('User registered successfully:', user);
-    console.log('Generated token:', token);
-    res.status(201).json({ token });
+    console.log('Generated token:', token); // Log the token
+    res.status(201).json({ token }); // Ensure the token is included in the response
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(400).json({ message: 'Error registering user', error: error.message });
@@ -55,7 +54,7 @@ router.post('/login', async (req, res) => {
 
       console.log('User logged in successfully:', user);
       console.log('Generated token:', token);
-      res.json({ token });
+      res.json({ token }); // Ensure the token is included in the response
     } else {
       console.log('Invalid username or password');
       res.status(401).json({ message: 'Invalid username or password' });
