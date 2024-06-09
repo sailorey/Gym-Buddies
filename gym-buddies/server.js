@@ -33,6 +33,11 @@ const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
+console.log('Environment Variables:');
+console.log('PORT:', PORT);
+console.log('DB_URI:', DB_URI);
+console.log('JWT_SECRET:', JWT_SECRET);
+
 if (!JWT_SECRET) {
   console.error('Error: Missing JWT_SECRET environment variable');
   process.exit(1); // Exit with error code if JWT_SECRET is not set

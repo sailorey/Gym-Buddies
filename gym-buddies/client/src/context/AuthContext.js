@@ -48,6 +48,7 @@ const AuthProvider = ({ children }) => {
       const response = await axios.post('/api/users/login', { username, password });
       console.log('Login response:', response);
       const { token } = response.data;
+      console.log('Received token:', token);
       if (!token) {
         throw new Error('Token not found in response');
       }
@@ -65,6 +66,7 @@ const AuthProvider = ({ children }) => {
       const response = await axios.post('/api/users/register', { username, password });
       console.log('Register response:', response);
       const { token } = response.data;
+      console.log('Received token:', token);
       if (!token) {
         throw new Error('Token not found in response');
       }

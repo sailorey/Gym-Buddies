@@ -25,6 +25,7 @@ router.post('/register', async (req, res) => {
       expiresIn: '1h',
     });
 
+    console.log('Generated token on registration:', token);
     res.status(201).json({ token });
   } catch (error) {
     res.status(400).json({ message: 'Error registering user', error: error.message });
@@ -48,6 +49,7 @@ router.post('/login', async (req, res) => {
       expiresIn: '1h',
     });
 
+    console.log('Generated token on login:', token);
     res.json({ token });
   } catch (error) {
     res.status(400).json({ message: 'Error logging in user', error });
