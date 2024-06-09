@@ -42,9 +42,10 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 console.log('DB_URI:', DB_URI);
-console.log('JWT_SECRET:', process.env.JWT_SECRET);
+console.log('JWT_SECRET:', JWT_SECRET);
 console.log('PORT:', PORT);
 
 mongoose.connect(DB_URI)
