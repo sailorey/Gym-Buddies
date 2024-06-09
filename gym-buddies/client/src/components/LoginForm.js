@@ -14,11 +14,11 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const result = await loginUser(username, password);
-      if (result.success) {
+      if (result) {
         setMessage('User logged in successfully');
         navigate('/profile'); // Redirect to profile page
       } else {
-        setMessage(result.message || 'Login failed');
+        setMessage('Login failed');
       }
     } catch (error) {
       setMessage('Login failed');

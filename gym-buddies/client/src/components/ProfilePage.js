@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 import Chart from 'chart.js/auto';
 import '../styles/ProfilePage.css';
 
 const ProfilePage = () => {
-  const { user, authAxios } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [measurements, setMeasurements] = useState([]);
   const [weight, setWeight] = useState('');
   const [editWeight, setEditWeight] = useState('');
@@ -18,7 +19,12 @@ const ProfilePage = () => {
     const fetchMeasurements = async () => {
       if (!user || !user._id) return;
       try {
-        const { data } = await authAxios.get(`/measurements/user/${user._id}`);
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get(`/api/measurements/user/${user._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         console.log('Fetched measurements:', data);
         setMeasurements(data);
         setChart(data);
@@ -28,12 +34,17 @@ const ProfilePage = () => {
     };
 
     fetchMeasurements();
-  }, [authAxios, user]);
+  }, [user]);
 
   const handleAddMeasurement = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await authAxios.post('/measurements', { weight });
+      const token = localStorage.getItem('token');
+      const { data } = await axios.post('/api/measurements', { weight }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log('Measurement added:', data);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = [...prevMeasurements, data];
@@ -54,7 +65,12 @@ const ProfilePage = () => {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await authAxios.put(`/measurements/${editingMeasurement._id}`, { weight: editWeight });
+      const token = localStorage.getItem('token');
+      const { data } = await axios.put(`/api/measurements/${editingMeasurement._id}`, { weight: editWeight }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log('Measurement updated:', data);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = prevMeasurements.map((m) => (m._id === editingMeasurement._id ? data : m));
@@ -70,7 +86,12 @@ const ProfilePage = () => {
 
   const handleDeleteMeasurement = async (id) => {
     try {
-      await authAxios.delete(`/measurements/${id}`);
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/measurements/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log('Measurement deleted:', id);
       setMeasurements((prevMeasurements) => {
         const newMeasurements = prevMeasurements.filter((m) => m._id !== id);
@@ -108,7 +129,6 @@ const ProfilePage = () => {
       }
     });
   };
-
 
   const indexOfLastMeasurement = currentPage * measurementsPerPage;
   const indexOfFirstMeasurement = indexOfLastMeasurement - measurementsPerPage;

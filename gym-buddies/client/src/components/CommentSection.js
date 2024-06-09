@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 import '../styles/CommentSection.css';
 
 const CommentSection = ({ workoutId }) => {
-  const { user, authAxios } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState('');
   const [editingComment, setEditingComment] = useState(null);
@@ -12,7 +13,12 @@ const CommentSection = ({ workoutId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const { data } = await authAxios.get(`/comments/workout/${workoutId}`);
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get(`/api/comments/workout/${workoutId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setComments(data);
       } catch (error) {
         console.error('Error fetching comments', error);
@@ -20,12 +26,21 @@ const CommentSection = ({ workoutId }) => {
     };
 
     fetchComments();
-  }, [authAxios, workoutId]);
+  }, [workoutId]);
 
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await authAxios.post('/comments', { content, workout: workoutId });
+      const token = localStorage.getItem('token');
+      const { data } = await axios.post(
+        '/api/comments',
+        { content, workout: workoutId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setComments([...comments, data]);
       setContent('');
     } catch (error) {
@@ -35,7 +50,12 @@ const CommentSection = ({ workoutId }) => {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await authAxios.delete(`/comments/${commentId}`);
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/comments/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setComments(comments.filter((comment) => comment._id !== commentId));
     } catch (error) {
       console.error('Error deleting comment', error);
@@ -50,7 +70,16 @@ const CommentSection = ({ workoutId }) => {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     try {
-      await authAxios.put(`/comments/${editingComment._id}`, { content: editContent });
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `/api/comments/${editingComment._id}`,
+        { content: editContent },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setComments(comments.map((comment) => (comment._id === editingComment._id ? { ...comment, content: editContent, edited: true } : comment)));
       setEditingComment(null);
       setEditContent('');

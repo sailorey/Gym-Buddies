@@ -18,10 +18,10 @@ const SignUpForm = () => {
 
     try {
       const result = await registerUser(username, password);
-      if (result.success) {
+      if (result) {
         setMessage('User registered successfully');
       } else {
-        setMessage(result.message);
+        setMessage('Registration failed');
       }
     } catch (error) {
       setMessage('Registration failed');

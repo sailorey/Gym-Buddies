@@ -51,9 +51,7 @@ const AuthProvider = ({ children }) => {
       if (!token) {
         throw new Error('Token not found in response');
       }
-      localStorage.setItem('token', token);
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      login(token);
       navigate('/profile');
     } catch (error) {
       console.error('Error logging in:', error);
@@ -70,9 +68,7 @@ const AuthProvider = ({ children }) => {
       if (!token) {
         throw new Error('Token not found in response');
       }
-      localStorage.setItem('token', token);
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      login(token);
       navigate('/profile');
     } catch (error) {
       console.error('Error registering:', error);
@@ -80,15 +76,8 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const authAxios = axios.create({
-    baseURL: 'https://gym-buddies.onrender.com/api',
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
-
   return (
-    <AuthContext.Provider value={{ user, login, logout, loginUser, registerUser, authAxios }}>
+    <AuthContext.Provider value={{ user, login, logout, loginUser, registerUser }}>
       {children}
     </AuthContext.Provider>
   );

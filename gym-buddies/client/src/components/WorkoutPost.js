@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import CommentSection from './CommentSection';
 import '../styles/WorkoutPost.css';
 
 const WorkoutPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, authAxios } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [workout, setWorkout] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -19,24 +20,34 @@ const WorkoutPost = () => {
     if (id) {
       const fetchWorkout = async () => {
         try {
-          const { data } = await authAxios.get(`/workouts/${id}`);
+          const token = localStorage.getItem('token');
+          const { data } = await axios.get(`/api/workouts/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setWorkout(data);
           setTitle(data.title);
           setDescription(data.description);
           setExercises(data.exercises.join(', '));
         } catch (error) {
           console.error('Error fetching workout', error);
+          setMessage('Error fetching workout');
         }
       };
 
       fetchWorkout();
     }
-  }, [authAxios, id]);
+  }, [id]);
 
   const handleDelete = async () => {
     try {
-      const response = await authAxios.delete(`/workouts/${id}`);
-      console.log('Delete response:', response);
+      const token = localStorage.getItem('token');
+      await axios.delete(`/api/workouts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate('/workouts');
     } catch (error) {
       console.error('Error deleting workout', error);
@@ -45,13 +56,21 @@ const WorkoutPost = () => {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-
     try {
-      await authAxios.put(`/workouts/${id}`, {
-        title,
-        description,
-        exercises: exercises.split(','),
-      });
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `/api/workouts/${id}`,
+        {
+          title,
+          description,
+          exercises: exercises.split(','),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setMessage('Workout updated successfully');
       setIsEditing(false);
     } catch (error) {
@@ -61,13 +80,21 @@ const WorkoutPost = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await authAxios.post('/workouts', {
-        title,
-        description,
-        exercises: exercises.split(','),
-      });
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        '/api/workouts',
+        {
+          title,
+          description,
+          exercises: exercises.split(','),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setMessage('Workout posted successfully');
       setTitle('');
       setDescription('');

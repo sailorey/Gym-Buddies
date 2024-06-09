@@ -14,20 +14,9 @@ const measurementRouter = require('./routes/measurementRouter');
 
 const app = express();
 
-const corsOptions = {
-  origin: '*', // Allow all origins for testing
-  optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
-
-app.use((req, res, next) => {
-  console.log(`Received request: ${req.method} ${req.url}`);
-  console.log('Request Body:', req.body); // Log the request body
-  next();
-});
+app.use(morgan('dev'));
 
 app.use('/api/users', userRouter);
 app.use('/api/workouts', workoutRouter);
@@ -42,16 +31,11 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 const DB_URI = process.env.DB_URI;
-const JWT_SECRET = process.env.JWT_SECRET;
-
-console.log('DB_URI:', DB_URI);
-console.log('JWT_SECRET:', JWT_SECRET);
-console.log('PORT:', PORT);
 
 mongoose.connect(DB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch(error => {
     console.error('Database connection error:', error);

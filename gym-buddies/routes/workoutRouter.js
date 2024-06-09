@@ -43,12 +43,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-
 // Create a new workout
 router.post('/', authMiddleware, async (req, res) => {
   const { title, description, exercises } = req.body;
   try {
-    const workout = new Workout({ title, description, exercises, user: req.user.id, username: req.user.username });
+    const workout = new Workout({ title, description, exercises, user: req.user.id });
     await workout.save();
     res.status(201).json(workout);
   } catch (error) {

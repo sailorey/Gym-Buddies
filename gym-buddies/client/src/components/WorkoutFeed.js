@@ -1,17 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../styles/WorkoutFeed.css'; // Import the CSS file
+import '../styles/WorkoutFeed.css';
 
 const WorkoutFeed = () => {
-  const { authAxios } = useContext(AuthContext);
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const { data } = await authAxios.get('/workouts');
-        console.log('Fetched workouts:', data); // Log the fetched data
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get('/api/workouts', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setWorkouts(data);
       } catch (error) {
         console.error('Error fetching workouts', error);
@@ -19,14 +22,14 @@ const WorkoutFeed = () => {
     };
 
     fetchWorkouts();
-  }, [authAxios]);
+  }, []);
 
   return (
     <div className="workout-feed container">
       <h2>Workout Feed</h2>
       {workouts.map((workout) => (
         <div key={workout._id} className="workout">
-          {workout.username && <h1> {workout.username} </h1>}
+          {workout.username && <h1>{workout.username}</h1>}
           <h3>{workout.title}</h3>
           <p>{workout.description}</p>
           <Link to={`/workout/${workout._id}`}>View Details</Link>

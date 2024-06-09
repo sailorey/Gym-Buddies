@@ -30,6 +30,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/jsonwebtoken": "^9.0.6"
-  }
+  },
+  
+    "proxy": "http://localhost:5001"
+  
 }
