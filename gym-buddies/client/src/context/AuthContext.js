@@ -44,18 +44,17 @@ const AuthProvider = ({ children }) => {
 
   const loginUser = async (username, password) => {
     try {
-      const response = await axios.post('https://gym-buddies.onrender.com/api/users/login', { username, password });
+      console.log('Attempting to log in');
+      const response = await axios.post('/api/users/login', { username, password });
       console.log('Login response:', response);
-      if (response.data && response.data.token) {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setUser({ _id: decodedToken.id, username: decodedToken.username });
-        navigate('/profile');
-      } else {
-        console.error('Token not found in response');
+      const { token } = response.data;
+      if (!token) {
         throw new Error('Token not found in response');
       }
+      localStorage.setItem('token', token);
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      navigate('/profile');
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
@@ -64,18 +63,17 @@ const AuthProvider = ({ children }) => {
 
   const registerUser = async (username, password) => {
     try {
-      const response = await axios.post('https://gym-buddies.onrender.com/api/users/register', { username, password });
+      console.log('Attempting to register');
+      const response = await axios.post('/api/users/register', { username, password });
       console.log('Register response:', response);
-      if (response.data && response.data.token) {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setUser({ _id: decodedToken.id, username: decodedToken.username });
-        navigate('/profile');
-      } else {
-        console.error('Token not found in response');
+      const { token } = response.data;
+      if (!token) {
         throw new Error('Token not found in response');
       }
+      localStorage.setItem('token', token);
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUser({ _id: decodedToken.id, username: decodedToken.username });
+      navigate('/profile');
     } catch (error) {
       console.error('Error registering:', error);
       throw error;

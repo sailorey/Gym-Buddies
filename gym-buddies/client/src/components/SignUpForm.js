@@ -16,11 +16,15 @@ const SignUpForm = () => {
       return;
     }
 
-    const result = await registerUser(username, password);
-    if (result.success) {
-      setMessage('User registered successfully');
-    } else {
-      setMessage(result.message || 'Registration failed');
+    try {
+      const result = await registerUser(username, password);
+      if (result.success) {
+        setMessage('User registered successfully');
+      } else {
+        setMessage(result.message);
+      }
+    } catch (error) {
+      setMessage('Registration failed');
     }
   };
 

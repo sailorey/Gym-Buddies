@@ -12,12 +12,16 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await loginUser(username, password);
-    if (result.success) {
-      setMessage('User logged in successfully');
-      navigate('/profile'); // Redirect to profile page
-    } else {
-      setMessage(result.message || 'Login failed');
+    try {
+      const result = await loginUser(username, password);
+      if (result.success) {
+        setMessage('User logged in successfully');
+        navigate('/profile'); // Redirect to profile page
+      } else {
+        setMessage(result.message || 'Login failed');
+      }
+    } catch (error) {
+      setMessage('Login failed');
     }
   };
 
