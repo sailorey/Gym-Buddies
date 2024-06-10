@@ -77,7 +77,7 @@ const WorkoutPost = () => {
       setIsEditing(false);
     } catch (error) {
       setMessage('Error updating workout');
-      console.error('Error updating workout', error);
+      console.error('Error updating workout:', error);
     }
   };
 
@@ -105,7 +105,7 @@ const WorkoutPost = () => {
       navigate(`/workout/${response.data._id}`);
     } catch (error) {
       setMessage('Error posting workout');
-      console.error('Error posting workout', error);
+      console.error('Error posting workout:', error);
     }
   };
 
@@ -156,7 +156,7 @@ const WorkoutPost = () => {
         </form>
       ) : (
         <>
-          <h1>{workout.username}</h1>
+          <h1>{workout.user.username}</h1>
           <h2>{workout.title}</h2>
           <p>Description: {workout.description}</p>
           <div>
