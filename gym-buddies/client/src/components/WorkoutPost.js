@@ -33,7 +33,7 @@ const WorkoutPost = () => {
           setDescription(data.description);
           setExercises(data.exercises.join(', '));
         } catch (error) {
-          console.error('Error fetching workout:', error);
+          console.error('Error fetching workout', error);
           setMessage('Error fetching workout');
         }
       };
@@ -52,7 +52,7 @@ const WorkoutPost = () => {
       });
       navigate('/workouts');
     } catch (error) {
-      console.error('Error deleting workout:', error);
+      console.error('Error deleting workout', error);
     }
   };
 
@@ -77,7 +77,7 @@ const WorkoutPost = () => {
       setIsEditing(false);
     } catch (error) {
       setMessage('Error updating workout');
-      console.error('Error updating workout:', error);
+      console.error('Error updating workout', error);
     }
   };
 
@@ -105,7 +105,7 @@ const WorkoutPost = () => {
       navigate(`/workout/${response.data._id}`);
     } catch (error) {
       setMessage('Error posting workout');
-      console.error('Error posting workout:', error);
+      console.error('Error posting workout', error);
     }
   };
 
